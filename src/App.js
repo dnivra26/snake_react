@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
+import blue from './blue.png';
+import red from './red.png';
 
 class App extends Component {
   constructor(){
@@ -14,11 +16,44 @@ class App extends Component {
     this.createOption = this.createOption.bind(this);
     this.drawOption = this.drawOption.bind(this);
     this.optionEaten = this.optionEaten.bind(this);
+    this.getQuestion = this.getQuestion.bind(this);
+    this.getRandomInt = this.getRandomInt.bind(this);
     this.state = {
       colors: {
         optionA: ["red", "darkred"],
         optionB: ["blue","darkblue"]
-      }
+      },
+      question: {
+        "title": "",
+        "optionA": "",
+        "optionB": ""
+      },
+      questions: [
+        {
+          "title": "What is the full form of CPU?",
+          "optionA": "Central Processing Unit",
+          "optionB": "Central Progressive Unit",
+          "answer": "optionA"
+        },
+        {
+          "title": "What is the full form of ALU?",
+          "optionA": "Arithmetic Local Unit",
+          "optionB": "Arithmetic Logic Unit",
+          "answer": "optionB"
+        },
+        {
+          "title": "Joystick is ---?",
+          "optionA": "An input device",
+          "optionB": "An output device",
+          "answer": "optionA"
+        },
+        {
+          "title": "Flat panel is type of a monitor?",
+          "optionA": "Yes",
+          "optionB": "No",
+          "answer": "optionB"
+        }
+      ]
     }
     
   }
@@ -30,7 +65,7 @@ class App extends Component {
     const x = this.randomTen(0, this.gameCanvas.width - 10);
     const y = this.randomTen(0, this.gameCanvas.height - 10);
     snake.forEach((part) => {
-      const optionOnSnake = part.x == x && part.y == y
+      const optionOnSnake = part.x === x && part.y === y
       if (optionOnSnake)
         this.createOption();
     });
@@ -44,7 +79,20 @@ class App extends Component {
     ctx.fillRect(x, y, 10, 10);
     ctx.strokeRect(x, y, 10, 10);
   }
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
+  getQuestion(){
+    const questions = this.state.questions;
+    const index = this.getRandomInt(0, (questions.length - 1));
+    const question = questions[index];
+    questions.splice(index,1)
+    this.setState({questions})
+    return question; 
+  }
   componentDidMount(){
     const CANVAS_BORDER_COLOUR = 'black';
     const CANVAS_BACKGROUND_COLOUR = "white";
@@ -66,7 +114,8 @@ class App extends Component {
       this.setState({snake, dx: 10,dy: 0})
       const optionA = this.createOption(snake);
       const optionB = this.createOption(snake);
-      this.setState({optionA, optionB});
+      const question = this.getQuestion();
+      this.setState({optionA, optionB, question});
 
       this.advanceSnake();
   }
@@ -95,21 +144,32 @@ class App extends Component {
       const {dx, dy} = this.state;
       this.clearCanvas();
       const snake = this.state.snake;
-      const {foodX, foodY} = this.state;
       const head = {x: snake[0].x + dx, y: snake[0].y + dy};
       snake.unshift(head);
       const eatenOption = this.optionEaten(snake);
-      console.log("eaten", eatenOption);
+      const rightOption = this.state.question.answer;
+
       switch(eatenOption){
         case "optionA": {
+          if(rightOption !== "optionA") {
+            snake.pop();
+            snake.pop();  
+          }
           const optionA = this.createOption(snake);
           const optionB = this.createOption(snake);
-          this.setState({optionA, optionB});
+          const question = this.getQuestion();
+          this.setState({optionA, optionB, question});
           break;
         }
         case "optionB": {
-          snake.pop();
-          snake.pop();
+          if(rightOption !== "optionB") {
+            snake.pop();
+            snake.pop();  
+          }
+          const optionA = this.createOption(snake);
+          const optionB = this.createOption(snake);
+          const question = this.getQuestion();
+          this.setState({optionA, optionB, question});
           break;
         }
         default:{
@@ -166,6 +226,11 @@ class App extends Component {
     return (
       <div className="App" onKeyDown={(event) => {this.changeDirection(event)}} tabIndex="0">
         <header className="App-header">
+        <div>
+          {this.state.question.title}<br/>
+          <img src={red} height="16" width="16"/> {this.state.question.optionA}<br/>
+          <img src={blue} height="16" width="16"/> {this.state.question.optionB}<br/>
+        </div>
         <canvas ref="canvas" id="gameCanvas" width="600" height="400"></canvas>
         </header>
       </div>
