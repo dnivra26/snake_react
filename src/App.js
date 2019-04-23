@@ -19,6 +19,7 @@ class App extends Component {
     this.getQuestion = this.getQuestion.bind(this);
     this.getRandomInt = this.getRandomInt.bind(this);
     this.state = {
+      score: 0,
       colors: {
         optionA: ["red", "darkred"],
         optionB: ["blue","darkblue"]
@@ -154,6 +155,9 @@ class App extends Component {
           if(rightOption !== "optionA") {
             snake.pop();
             snake.pop();  
+          } else {
+            const score = this.state.score + 1;
+            this.setState({score});
           }
           const optionA = this.createOption(snake);
           const optionB = this.createOption(snake);
@@ -165,6 +169,9 @@ class App extends Component {
           if(rightOption !== "optionB") {
             snake.pop();
             snake.pop();  
+          }else {
+            const score = this.state.score + 1;
+            this.setState({score});
           }
           const optionA = this.createOption(snake);
           const optionB = this.createOption(snake);
@@ -226,6 +233,9 @@ class App extends Component {
     return (
       <div className="App" onKeyDown={(event) => {this.changeDirection(event)}} tabIndex="0">
         <header className="App-header">
+        <div>
+          Your score: {this.state.score}
+        </div>
         <div>
           {this.state.question.title}<br/>
           <img src={red} height="16" width="16"/> {this.state.question.optionA}<br/>
