@@ -145,6 +145,7 @@ class App extends Component {
     const CANVAS_BACKGROUND_COLOUR = "white";
 
       this.gameCanvas = this.refs.canvas
+      this.gameCanvas.focus();
       var ctx = this.gameCanvas.getContext("2d");
       ctx.fillStyle = CANVAS_BACKGROUND_COLOUR;
       ctx.strokestyle = CANVAS_BORDER_COLOUR;
@@ -202,7 +203,7 @@ class App extends Component {
            hitBottomWall
   }
   advanceSnake() {
-    if(this.didGameEnd(this.state.snake) || (this.state.questions.length === 0)) {
+    if(this.state.snake.length <= 0 || this.didGameEnd(this.state.snake) || (this.state.questions.length === 0)) {
       this.setState({"gameOver": true});
       return
     }
@@ -300,7 +301,7 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App" onKeyDown={(event) => {this.changeDirection(event)}} tabIndex="0">
+      <div className="App" >
         <header className="App-header">
         <div>
           Your score: {this.state.score}
@@ -310,7 +311,7 @@ class App extends Component {
           <img src={red} height="16" width="16"/> {this.state.question.optionA}<br/>
           <img src={blue} height="16" width="16"/> {this.state.question.optionB}<br/>
         </div>
-        <canvas ref="canvas" id="gameCanvas" width="600" height="400"></canvas>
+        <canvas ref="canvas" id="gameCanvas" width="600" height="400" onKeyDown={(event) => {this.changeDirection(event)}} tabIndex="0"></canvas>
         {this.state.gameOver ? <div>Game Over</div>: null}
         {this.state.gameWon ? <div>You've Won</div>: null}
         </header>
