@@ -9,8 +9,35 @@ class App extends Component {
     this.advanceSnake = this.advanceSnake.bind(this);
     this.clearCanvas = this.clearCanvas.bind(this);
     this.changeDirection = this.changeDirection.bind(this);
+
+    this.randomTen = this.randomTen.bind(this);
+    this.createFood = this.createFood.bind(this);
+    this.drawFood = this.drawFood.bind(this);
     
   }
+  randomTen(min, max) {
+    return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+  }
+
+  createFood(snake) {
+    const foodX = this.randomTen(0, this.gameCanvas.width - 10);
+    const foodY = this.randomTen(0, this.gameCanvas.height - 10);
+    snake.forEach((part) => {
+      const foodIsOnSnake = part.x == foodX && part.y == foodY
+      if (foodIsOnSnake)
+        this.createFood();
+    });
+    this.setState({foodX, foodY});
+  }
+  
+  drawFood() {
+    const ctx = this.gameCanvas.getContext("2d");
+    ctx.fillStyle = 'red';
+    ctx.strokestyle = 'darkred';
+    ctx.fillRect(this.state.foodX, this.state.foodY, 10, 10);
+    ctx.strokeRect(this.state.foodX, this.state.foodY, 10, 10);
+  }
+
   componentDidMount(){
     const CANVAS_BORDER_COLOUR = 'black';
     const CANVAS_BACKGROUND_COLOUR = "white";
@@ -30,6 +57,7 @@ class App extends Component {
         {x: 110, y: 150}
       ];
       this.setState({snake, dx: 10,dy: 0})
+      this.createFood(snake);
       this.advanceSnake();
   }
   clearCanvas() {
@@ -47,9 +75,18 @@ class App extends Component {
       const {dx, dy} = this.state;
       this.clearCanvas();
       const snake = this.state.snake;
+      const {foodX, foodY} = this.state;
       const head = {x: snake[0].x + dx, y: snake[0].y + dy};
       snake.unshift(head);
-      snake.pop();
+
+      const didEatFood = snake[0].x === foodX && snake[0].y === foodY;
+      if (didEatFood) {
+        this.createFood(snake);
+      } else {
+        snake.pop();
+      }
+
+      this.drawFood();
       this.drawSnake(snake);
       this.setState({snake});
       this.advanceSnake();  
