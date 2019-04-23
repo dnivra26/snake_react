@@ -39,6 +39,8 @@ class App extends Component {
         {x: 120, y: 150},
         {x: 110, y: 150}
       ],
+      dx: 10,dy: 0,
+      gameStarted: false,
       questions: [
         {
           "title": "What is the full form of CPU?",
@@ -164,8 +166,9 @@ class App extends Component {
       const optionB = this.createOption(snake);
       const question = this.getQuestion();
       this.setState({optionA, optionB, question});
-
-      this.advanceSnake();
+      this.drawOption(optionA.x, optionA.y, "optionA");
+      this.drawOption(optionB.x, optionB.y, "optionB");
+      this.drawSnake(snake);
   }
   clearCanvas() {
     var ctx = this.gameCanvas.getContext("2d");
@@ -271,6 +274,7 @@ class App extends Component {
     ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
   }
   changeDirection(event) {
+    const SPACE = 32;
     let dx = 0, dy = 0;
     const LEFT_KEY = 37;
     const RIGHT_KEY = 39;
@@ -281,6 +285,11 @@ class App extends Component {
     const goingDown = dy === 10;
     const goingRight = dx === 10;
     const goingLeft = dx === -10;
+    if(keyPressed === SPACE) {
+      this.advanceSnake();
+      this.setState({gameStarted: true});
+      return;
+    }
     if (keyPressed === LEFT_KEY && !goingRight) {
       dx = -10;
       dy = 0;
@@ -303,6 +312,7 @@ class App extends Component {
     return (
       <div className="App" >
         <header className="App-header">
+          {this.state.gameStarted ? null : <div> PRESS SPACE BAR TO START THE GAME </div> }
         <div>
           Your score: {this.state.score}
         </div>
