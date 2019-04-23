@@ -18,7 +18,9 @@ class App extends Component {
     this.optionEaten = this.optionEaten.bind(this);
     this.getQuestion = this.getQuestion.bind(this);
     this.getRandomInt = this.getRandomInt.bind(this);
+    this.didGameEnd = this.didGameEnd.bind(this);
     this.state = {
+      gameOver: false,
       score: 0,
       colors: {
         optionA: ["red", "darkred"],
@@ -29,6 +31,13 @@ class App extends Component {
         "optionA": "",
         "optionB": ""
       },
+      snake: [
+        {x: 150, y: 150},
+        {x: 140, y: 150},
+        {x: 130, y: 150},
+        {x: 120, y: 150},
+        {x: 110, y: 150}
+      ],
       questions: [
         {
           "title": "What is the full form of CPU?",
@@ -140,7 +149,26 @@ class App extends Component {
     }
     return null
   }
+  didGameEnd(snake) {
+    for (let i = 4; i < snake.length; i++) {
+      const didCollide = snake[i].x === snake[0].x &&
+        snake[i].y === snake[0].y
+      if (didCollide) return true
+    }
+    const hitLeftWall = snake[0].x < 0;
+    const hitRightWall = snake[0].x > this.gameCanvas.width - 10;
+    const hitToptWall = snake[0].y < 0;
+    const hitBottomWall = snake[0].y > this.gameCanvas.height - 10;
+    return hitLeftWall || 
+           hitRightWall || 
+           hitToptWall ||
+           hitBottomWall
+  }
   advanceSnake() {
+    if(this.didGameEnd(this.state.snake)) {
+      this.setState({"gameOver": true});
+      return
+    }
     setTimeout(() => {
       const {dx, dy} = this.state;
       this.clearCanvas();
@@ -242,6 +270,7 @@ class App extends Component {
           <img src={blue} height="16" width="16"/> {this.state.question.optionB}<br/>
         </div>
         <canvas ref="canvas" id="gameCanvas" width="600" height="400"></canvas>
+        {this.state.gameOver ? <div>Game Over</div>: null}
         </header>
       </div>
     );
