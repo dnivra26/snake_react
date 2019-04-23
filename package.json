@@ -2,6 +2,7 @@
   "name": "snake_react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dnivra26.github.io/snake_react/",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
