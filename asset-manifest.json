@@ -1,13 +1,13 @@
 {
-  "main.css": "/static/css/main.587437df.chunk.css",
-  "main.js": "/static/js/main.d2480b97.chunk.js",
-  "main.js.map": "/static/js/main.d2480b97.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.c5541365.js",
-  "runtime~main.js.map": "/static/js/runtime~main.c5541365.js.map",
-  "static/js/2.2b1fa201.chunk.js": "/static/js/2.2b1fa201.chunk.js",
-  "static/js/2.2b1fa201.chunk.js.map": "/static/js/2.2b1fa201.chunk.js.map",
-  "index.html": "/index.html",
-  "precache-manifest.0510db9cbb290b3635e081fc480366b6.js": "/precache-manifest.0510db9cbb290b3635e081fc480366b6.js",
-  "service-worker.js": "/service-worker.js",
-  "static/css/main.587437df.chunk.css.map": "/static/css/main.587437df.chunk.css.map"
+  "main.css": "/snake_react/static/css/main.587437df.chunk.css",
+  "main.js": "/snake_react/static/js/main.24c39d06.chunk.js",
+  "main.js.map": "/snake_react/static/js/main.24c39d06.chunk.js.map",
+  "runtime~main.js": "/snake_react/static/js/runtime~main.ed6f5f00.js",
+  "runtime~main.js.map": "/snake_react/static/js/runtime~main.ed6f5f00.js.map",
+  "static/js/2.2b1fa201.chunk.js": "/snake_react/static/js/2.2b1fa201.chunk.js",
+  "static/js/2.2b1fa201.chunk.js.map": "/snake_react/static/js/2.2b1fa201.chunk.js.map",
+  "index.html": "/snake_react/index.html",
+  "precache-manifest.c1a0d631b169719c9bb919b504e14e4c.js": "/snake_react/precache-manifest.c1a0d631b169719c9bb919b504e14e4c.js",
+  "service-worker.js": "/snake_react/service-worker.js",
+  "static/css/main.587437df.chunk.css.map": "/snake_react/static/css/main.587437df.chunk.css.map"
 }
