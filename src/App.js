@@ -21,6 +21,7 @@ class App extends Component {
     this.didGameEnd = this.didGameEnd.bind(this);
     this.state = {
       gameOver: false,
+      gameWon: false,
       score: 0,
       colors: {
         optionA: ["red", "darkred"],
@@ -52,17 +53,53 @@ class App extends Component {
           "answer": "optionB"
         },
         {
-          "title": "Joystick is ---?",
+          "title": "Joystick is ?",
           "optionA": "An input device",
           "optionB": "An output device",
           "answer": "optionA"
         },
         {
-          "title": "Flat panel is type of a monitor?",
-          "optionA": "Yes",
-          "optionB": "No",
+          "title": "Who among the following had developed the first commercially available portable computer?",
+          "optionA": "Ada Lovelace",
+          "optionB": "Adam Osborne",
           "answer": "optionB"
-        }
+        },
+        {
+          "title": "Which among the following is a permanent storage device?",
+          "optionA": "ROM",
+          "optionB": "RAM",
+          "answer": "optionA"
+        },
+        {
+          "title": "Which ones is a programming language?",
+          "optionA": "HTTP",
+          "optionB": "HTML",
+          "answer": "optionB"
+        },
+        {
+          "title": "Wcich protocol is used to send e-mails?",
+          "optionA": "SMTP",
+          "optionB": "POP3",
+          "answer": "optionA"
+        },
+        {
+          "title": "What converts assembly language to machine language",
+          "optionA": "Compiler",
+          "optionB": "Assembler",
+          "answer": "optionB"
+        },
+        {
+          "title": "Consul is a Open Source Software",
+          "optionA": "True",
+          "optionB": "False",
+          "answer": "optionA"
+        },
+        {
+          "title": "extension of excel 2007 files",
+          "optionA": ".xlsx",
+          "optionB": ".xls",
+          "answer": "optionB"
+        },
       ]
     }
     
@@ -93,7 +130,7 @@ class App extends Component {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+  }
 
   getQuestion(){
     const questions = this.state.questions;
@@ -165,8 +202,12 @@ class App extends Component {
            hitBottomWall
   }
   advanceSnake() {
-    if(this.didGameEnd(this.state.snake)) {
+    if(this.didGameEnd(this.state.snake) || (this.state.questions.length === 0)) {
       this.setState({"gameOver": true});
+      return
+    }
+    if(this.state.score >= 3) {
+      this.setState({"gameWon": true});
       return
     }
     setTimeout(() => {
@@ -271,6 +312,7 @@ class App extends Component {
         </div>
         <canvas ref="canvas" id="gameCanvas" width="600" height="400"></canvas>
         {this.state.gameOver ? <div>Game Over</div>: null}
+        {this.state.gameWon ? <div>You've Won</div>: null}
         </header>
       </div>
     );
