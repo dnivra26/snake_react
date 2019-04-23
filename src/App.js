@@ -11,31 +11,38 @@ class App extends Component {
     this.changeDirection = this.changeDirection.bind(this);
 
     this.randomTen = this.randomTen.bind(this);
-    this.createFood = this.createFood.bind(this);
-    this.drawFood = this.drawFood.bind(this);
+    this.createOption = this.createOption.bind(this);
+    this.drawOption = this.drawOption.bind(this);
+    this.optionEaten = this.optionEaten.bind(this);
+    this.state = {
+      colors: {
+        optionA: ["red", "darkred"],
+        optionB: ["blue","darkblue"]
+      }
+    }
     
   }
   randomTen(min, max) {
     return Math.round((Math.random() * (max-min) + min) / 10) * 10;
   }
 
-  createFood(snake) {
-    const foodX = this.randomTen(0, this.gameCanvas.width - 10);
-    const foodY = this.randomTen(0, this.gameCanvas.height - 10);
+  createOption(snake) {
+    const x = this.randomTen(0, this.gameCanvas.width - 10);
+    const y = this.randomTen(0, this.gameCanvas.height - 10);
     snake.forEach((part) => {
-      const foodIsOnSnake = part.x == foodX && part.y == foodY
-      if (foodIsOnSnake)
-        this.createFood();
+      const optionOnSnake = part.x == x && part.y == y
+      if (optionOnSnake)
+        this.createOption();
     });
-    this.setState({foodX, foodY});
+    return {x, y}
   }
   
-  drawFood() {
+  drawOption(x, y, option) {
     const ctx = this.gameCanvas.getContext("2d");
-    ctx.fillStyle = 'red';
-    ctx.strokestyle = 'darkred';
-    ctx.fillRect(this.state.foodX, this.state.foodY, 10, 10);
-    ctx.strokeRect(this.state.foodX, this.state.foodY, 10, 10);
+    ctx.fillStyle = this.state.colors[option][0]
+    ctx.strokestyle = this.state.colors[option][1]
+    ctx.fillRect(x, y, 10, 10);
+    ctx.strokeRect(x, y, 10, 10);
   }
 
   componentDidMount(){
@@ -57,7 +64,10 @@ class App extends Component {
         {x: 110, y: 150}
       ];
       this.setState({snake, dx: 10,dy: 0})
-      this.createFood(snake);
+      const optionA = this.createOption(snake);
+      const optionB = this.createOption(snake);
+      this.setState({optionA, optionB});
+
       this.advanceSnake();
   }
   clearCanvas() {
@@ -70,6 +80,16 @@ class App extends Component {
   drawSnake(snake) {
     snake.forEach(this.drawSnakePart);
   }
+  optionEaten(snake){
+    const {x:x1,y:y1} = this.state.optionA;
+    const {x:x2,y:y2} = this.state.optionB;
+    if(snake[0].x === x1 && snake[0].y === y1) {
+      return "optionA"
+    } else if(snake[0].x === x2 && snake[0].y === y2){
+      return "optionB"
+    }
+    return null
+  }
   advanceSnake() {
     setTimeout(() => {
       const {dx, dy} = this.state;
@@ -78,15 +98,29 @@ class App extends Component {
       const {foodX, foodY} = this.state;
       const head = {x: snake[0].x + dx, y: snake[0].y + dy};
       snake.unshift(head);
-
-      const didEatFood = snake[0].x === foodX && snake[0].y === foodY;
-      if (didEatFood) {
-        this.createFood(snake);
-      } else {
-        snake.pop();
+      const eatenOption = this.optionEaten(snake);
+      console.log("eaten", eatenOption);
+      switch(eatenOption){
+        case "optionA": {
+          const optionA = this.createOption(snake);
+          const optionB = this.createOption(snake);
+          this.setState({optionA, optionB});
+          break;
+        }
+        case "optionB": {
+          snake.pop();
+          snake.pop();
+          break;
+        }
+        default:{
+          snake.pop();  
+          break;
+        } 
       }
+      
 
-      this.drawFood();
+      this.drawOption(this.state.optionA.x, this.state.optionA.y, "optionA");
+      this.drawOption(this.state.optionB.x, this.state.optionB.y, "optionB");
       this.drawSnake(snake);
       this.setState({snake});
       this.advanceSnake();  
